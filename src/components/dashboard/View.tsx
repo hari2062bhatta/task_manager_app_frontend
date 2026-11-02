@@ -23,7 +23,9 @@ const View = () => {
   const getTask = async () => {
     try {
       const response = await api.get<TaskResponse>("/api/task/view");
+     
       setTasks(response.data.data);
+      console.log(tasks)
     } catch (err) {
       console.log(err);
       Swal.fire("Error", "Failed to fetch tasks", "error");
@@ -126,7 +128,8 @@ const View = () => {
       [e.target.name]: e.target.value,
     });
   };
-
+let createdAt
+let duration
   return (
     <div className="relative p-6">
       <h2 className="text-2xl font-semibold mb-5">
@@ -143,6 +146,9 @@ const View = () => {
                 <th className="p-3">Description</th>
                 <th className="p-3">Priority</th>
                 <th className="p-3">Status</th>
+                <th  className="p-3">Issued Date</th>
+                <th  className="p-3">Duration</th>
+                <th  className="p-3">Expiry Date</th>
                 <th className="p-3">Action</th>
               </tr>
             </thead>
@@ -194,7 +200,34 @@ const View = () => {
                         : task.status}
                     </span>
                   </td>
+                          {/* Date*/}
 
+                          <td className="p-3">
+                            <div>
+                              {new Date(task.createdAt).toLocaleDateString("en-GB", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            })}           
+                            </div>
+                          </td>
+                              <td className="p-5">
+                              <div>
+                                {task?.duration?<div>{task.duration}</div>:<div>0</div>}
+                              </div>
+                            </td>
+                            <td>
+                                                    {(() => {
+                                const expiryDate = new Date(task.createdAt);
+                                expiryDate.setDate(expiryDate.getDate() + task.duration);
+
+                                return expiryDate.toLocaleDateString("en-GB", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            });
+                              })()}
+                            </td>
                   {/* Actions */}
                   <td className="p-3">
                     <div className="flex gap-2">

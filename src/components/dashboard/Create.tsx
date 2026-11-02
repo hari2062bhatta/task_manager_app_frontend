@@ -4,7 +4,7 @@ import swal from "sweetalert2"
 const Create = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-
+   const[duration,setDuration]=useState<number>(1)
 
   const handleSubmit=async(e: React.SubmitEvent<HTMLFormElement>)=>{
     e.preventDefault()
@@ -15,10 +15,12 @@ const Create = () => {
             const response=await api.post("/api/task/create",{
                 title,
                 description,
+                duration
             })
             if(response.data.success){
                 setDescription("")
                 setTitle("")
+                setDuration(0)
                     swal.fire({
                         title:"success",
                         text:"task created successfully",
@@ -67,12 +69,26 @@ const Create = () => {
             className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+        <div>
+          <label className="block mb-1 text-sm font-medium">Duration</label>
+          <input  type="number"
+          className="outline-0 border focus: rounded-sm"
+           onChange={(e)=>setDuration(Number(e.target.value))}
+            value={duration}
+            min={1}
+            name="duration"
+          >
+          
+          
+          </input>
+        </div>
 
         <button
           type="submit"
 
           className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
         >
+
           Create Task
         </button>
       </form>
